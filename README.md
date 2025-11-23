@@ -1,6 +1,6 @@
 # 🚀 DevMundus - Innovation Without Borders
 
-![DevMundus Banner](https://via.placeholder.com/1200x400/1e40af/ffffff?text=DevMundus+Global+Technology+Partner)
+![DevMundus Banner](./public/assets/images/banner.png)
 
 > **Build. Launch. Scale. Globally. Effortlessly.**
 
