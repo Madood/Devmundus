@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 DevMundus - Innovation Without Borders
 
-## Getting Started
+![DevMundus Banner](https://via.placeholder.com/1200x400/1e40af/ffffff?text=DevMundus+Global+Technology+Partner)
 
-First, run the development server:
+> **Build. Launch. Scale. Globally. Effortlessly.**
+
+<div align="center">
+
+[![React](https://img.shields.io/badge/React-18.2+-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![Hostinger](https://img.shields.io/badge/Hostinger-673DE6?logo=hostinger&logoColor=white)](https://hostinger.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen)](https://devmundus.com)
+
+</div>
+
+## 🌟 About DevMundus
+
+**Your Global Technology Partner** - We help businesses build, scale, and manage world-class digital products in one place. From concept and design to development, deployment, and long-term support, we handle the entire product journey so you can focus on growth.
+
+### 🎯 Our Mission
+To empower businesses worldwide with exceptional technology solutions that drive growth, innovation, and competitive advantage.
+
+### 👁️ Our Vision  
+To be the most trusted global technology partner, recognized for delivering world-class digital products that transform industries.
+
+## 🛠️ Tech Stack
+
+| Category | Technologies |
+|----------|--------------|
+| **Frontend** | React, HTML5, CSS3, JavaScript, Tailwind CSS |
+| **Backend** | Firebase, Node.js, Express |
+| **Database** | Firestore, Realtime Database |
+| **Authentication** | Firebase Auth |
+| **Hosting** | Hostinger, Firebase Hosting |
+| **Deployment** | CI/CD with GitHub Actions |
+
+## 📊 Our Impact
+
+<div align="center">
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| **200+**<br>Projects | **150+**<br>Experts | **35+**<br>Countries | **98%**<br>Satisfaction |
+
+</div>
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 16+ 
+- npm or yarn
+- Git
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# Clone the repository
+git clone https://github.com/Madood/Devmundus.git
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Navigate to project directory
+cd Devmundus
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Install dependencies
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Start development server
+npm start
