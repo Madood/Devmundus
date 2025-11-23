@@ -1,6 +1,6 @@
 # 🚀 DevMundus - Innovation Without Borders
 
-![DevMundus Banner](./public/assets/images/banner.png)
+![DevMundus Banner](https://raw.githubusercontent.com/Madood/Devmundus/main/public/assets/images/banner.png)
 
 > **Build. Launch. Scale. Globally. Effortlessly.**
 
