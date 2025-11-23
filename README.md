@@ -1,6 +1,6 @@
 # 🚀 DevMundus - Innovation Without Borders
 
-![DevMundus Logo](https://raw.githubusercontent.com/Madood/Devmundus/main/public/Logo.png)
+![DevMundus Banner](https://raw.githubusercontent.com/Madood/Devmundus/main/public/WhatsApp%20Image%202025-10-22%20at%2000.40.54_e4a61351.jpg)
 
 > **Build. Launch. Scale. Globally. Effortlessly.**
 
