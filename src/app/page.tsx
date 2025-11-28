@@ -3,6 +3,7 @@ import { Header } from '@/components/Header';
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { About } from "@/components/About";
+import { Testimonials } from "@/components/testimonial"; // Fixed import path
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 
@@ -22,6 +23,11 @@ export default function HomePage() {
       {/* Services Section with ID */}
       <section id="services">
         <Services />
+      </section>
+
+      {/* Testimonials Section with ID */}
+      <section id="testimonials">
+        <Testimonials />
       </section>
 
       {/* Contact Section with ID */}
