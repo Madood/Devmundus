@@ -9,7 +9,7 @@ interface HeroProps {
 }
 
 export function Hero({ onNavigate }: HeroProps) {
-  const trustedBy = ['Fortune 500', 'Startups', 'Enterprise', 'SMBs'];
+  const trustedBy = ['SMEs', 'Startups', 'Enterprise', 'AI-integration'];
 
   // Direct scroll function for services section
   const scrollToServices = () => {
