@@ -73,27 +73,27 @@ export function Testimonials() {
     },
     {
       id: 6,
-      name: "Sarah Chen",
+      name: "Alexander kalucki",
       role: "CTO",
       company: "TechScale Inc.",
-      image: "/avatars/sarah-chen.jpg",
+      image: "/avatars/Alexander-Wojdela.jpg",
       rating: 4,
       text: "DevMundus delivered exceptional quality on our mobile app project. Their team's expertise in React Native and backend development helped us launch 3 weeks ahead of schedule. The communication was seamless across time zones.",
       project: "Mobile Banking Application"
     },
     {
       id: 7,
-      name: "Michael Rodriguez",
+      name: "Michael Kaminski",
       role: "Product Director",
       company: "Finova Solutions",
-      image: "/avatars/michael-rodriguez.jpg",
+      image: "/avatars/michael-Kaminski.jpg",
       rating: 4.5,
       text: "Working with DevMundus has been transformative. Their developers integrated perfectly with our team, and the cost savings allowed us to invest more in marketing. The quality matches what we'd expect from Silicon Valley talent.",
       project: "Financial Analytics Platform"
     },
     {
       id: 8,
-      name: "David Kim",
+      name: "David Thomas",
       role: "VP Engineering",
       company: "CloudSafe",
       image: "/avatars/david-kim.jpg",
