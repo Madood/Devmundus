@@ -1,7 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Mail, Phone, MapPin, Send, Clock } from 'lucide-react';
+
+// ---------------------------------------------------------------------------
+// Turnstile site key — set NEXT_PUBLIC_TURNSTILE_SITE_KEY in your environment.
+// Leave unset to disable Turnstile during local development.
+// Get your keys at: https://dash.cloudflare.com → Turnstile → Add site
+// ---------------------------------------------------------------------------
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -14,54 +21,109 @@ export function Contact() {
     message: ''
   });
 
+  // Honeypot value — should always stay empty for real users
+  const [honeypot, setHoneypot] = useState('');
+
+  // Turnstile token returned by the widget after the challenge completes
+  const [turnstileToken, setTurnstileToken] = useState('');
+
+  // Timestamp recorded when the form first renders — used to detect instant bot submissions
+  const formLoadTimeRef = useRef(Date.now());
+
   const [showToast, setShowToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Refs for Turnstile widget lifecycle management
+  const turnstileContainerRef = useRef<HTMLDivElement>(null);
+  const turnstileWidgetIdRef  = useRef<string | null>(null);
+
+  // Load and render the Turnstile widget when a site key is configured
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+
+    function renderWidget() {
+      if (!turnstileContainerRef.current) return;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const w = (window as any).turnstile;
+      if (!w) return;
+
+      if (turnstileWidgetIdRef.current !== null) {
+        w.remove(turnstileWidgetIdRef.current);
+      }
+
+      turnstileWidgetIdRef.current = w.render(turnstileContainerRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback:          (token: string) => setTurnstileToken(token),
+        'expired-callback': ()              => setTurnstileToken(''),
+        'error-callback':   ()              => setTurnstileToken(''),
+      });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((window as any).turnstile) {
+      renderWidget();
+    } else {
+      const script = document.createElement('script');
+      script.id    = 'cf-turnstile-script';
+      script.src   = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.onload = renderWidget;
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (turnstileWidgetIdRef.current !== null) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).turnstile?.remove(turnstileWidgetIdRef.current);
+        turnstileWidgetIdRef.current = null;
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage('');
 
     try {
-      // Using FormSubmit.co service - no backend required
-      const response = await fetch('https://formsubmit.co/ajax/enterprise@devmundus.com', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          company: formData.company,
-          role: formData.role,
-          inquiry: formData.inquiry,
-          budget: formData.budget,
-          message: formData.message,
-          _subject: `New Contact Form Submission from ${formData.name}`,
-          _template: 'table'
-        })
+          ...formData,
+          company_website: honeypot,             // honeypot field
+          _formLoadTime: formLoadTimeRef.current, // timing field
+          turnstileToken,                         // Turnstile challenge token
+        }),
       });
 
-      if (response.ok) {
+      const data = (await response.json()) as { success: boolean; message: string };
+
+      if (data.success) {
         setShowToast(true);
         setTimeout(() => setShowToast(false), 5000);
 
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          company: '',
-          role: '',
-          inquiry: '',
-          budget: '',
-          message: ''
-        });
+        // Reset form for next submission
+        setFormData({ name: '', email: '', company: '', role: '', inquiry: '', budget: '', message: '' });
+        setHoneypot('');
+        setTurnstileToken('');
+        formLoadTimeRef.current = Date.now();
+
+        // Reset the Turnstile widget so the user can submit again later
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (turnstileWidgetIdRef.current !== null) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (window as any).turnstile?.reset(turnstileWidgetIdRef.current);
+        }
       } else {
-        throw new Error('Failed to send message');
+        setErrorMessage(data.message ?? 'Something went wrong. Please try again.');
       }
-    } catch (error) {
-      console.error('Error sending email:', error);
-      alert('Failed to send message. Please try again or email us directly at enterprise@devmundus.com');
+    } catch {
+      setErrorMessage(
+        'Failed to send message. Please try again or email us directly at enterprise@devmundus.com',
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -78,14 +140,14 @@ export function Contact() {
     {
       icon: Phone,
       title: 'Call Us',
-      value: '+48 729 624 828',
+      value: '+1 816 3727479',
       subValue: 'Mon-Fri, 9AM-6PM CET',
-      link: 'tel:+48729624828'
+      link: 'tel:+18163727479'
     },
     {
       icon: MapPin,
-      title: 'Warsaw Office',
-      value: 'Warsaw, Poland',
+      title: 'Office',
+      value: 'Chicago, USA',
       subValue: 'Global offices available',
       link: null
     },
@@ -120,7 +182,7 @@ export function Contact() {
             Let&apos;s Discuss Your Needs
           </h2>
           <p className="text-slate-600 text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto">
-            Whether you&apos;re looking to hire top talent, seeking opportunities as a developer, 
+            Whether you&apos;re looking to hire top talent, seeking opportunities as a developer,
             or need project cost estimation, our team is here to help.
           </p>
         </div>
@@ -143,8 +205,8 @@ export function Contact() {
             );
 
             return (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="group p-6 text-center bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-14 h-14 bg-linear-to-br from-slate-900 to-slate-700 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -170,6 +232,27 @@ export function Contact() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* ----------------------------------------------------------------
+                Honeypot field — hidden off-screen, invisible to real users.
+                Bots that auto-fill all fields will populate this, triggering
+                silent rejection server-side.
+            ---------------------------------------------------------------- */}
+            <div
+              aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0 }}
+            >
+              <label htmlFor="company_website">Company Website</label>
+              <input
+                id="company_website"
+                type="text"
+                name="company_website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label htmlFor="name" className="block text-sm font-semibold text-slate-700">
@@ -288,9 +371,23 @@ export function Contact() {
               />
             </div>
 
+            {/* Cloudflare Turnstile widget — only rendered when site key is configured */}
+            {TURNSTILE_SITE_KEY && (
+              <div className="flex justify-center">
+                <div ref={turnstileContainerRef} />
+              </div>
+            )}
+
+            {/* Error message */}
+            {errorMessage && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+                {errorMessage}
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || (!!TURNSTILE_SITE_KEY && !turnstileToken)}
               className="w-full bg-linear-to-r from-slate-900 to-slate-700 hover:from-slate-800 hover:to-slate-600 disabled:from-slate-400 disabled:to-slate-300 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 disabled:cursor-not-allowed group"
             >
               {isSubmitting ? (
