@@ -49,15 +49,15 @@ export function Footer() {
 
   const footerLinks = {
     solutions: [
-      { label: 'Custom Development', href: '#services' },
-      { label: 'Dedicated Teams', href: '#services' },
-      { label: 'Product Design', href: '#services' },
-      { label: 'Project Costing', href: '#services' }
+      { label: 'Custom Development', href: '/#services' },
+      { label: 'Dedicated Teams', href: '/#services' },
+      { label: 'Product Design', href: '/#services' },
+      { label: 'Project Costing', href: '/#services' }
     ],
     company: [
-      { label: 'About Us', href: '#about' },
+      { label: 'About Us', href: '/#about' },
       { label: 'Careers', href: '#careers' },
-      { label: 'Contact', href: '#contact' },
+      { label: 'Contact', href: '/#contact' },
       { label: 'Partners', href: '#' }
     ],
     resources: [],

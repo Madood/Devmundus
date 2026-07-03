@@ -39,8 +39,7 @@ export default function RootLayout({
         {/* Comprehensive Favicon Setup */}
         <link rel="icon" href="/favicon.ico" />
         <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        
+
         {/* PNG icons for different sizes */}
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Extract and sanitize fields
-  const honeypot    = String(body.company_website ?? '');
+  const honeypot    = String(body.hp_check_2x9 ?? '');
   const loadTime    = Number(body._formLoadTime   ?? 0);
   const turnstileToken = String(body.turnstileToken ?? '');
 

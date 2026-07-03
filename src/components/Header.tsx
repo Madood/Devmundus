@@ -1,9 +1,17 @@
 // components/Header.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
+
+const NAV_ITEMS = [
+  { id: 'home', label: 'Home' },
+  { id: 'about', label: 'About Us' },
+  { id: 'services', label: 'Services' },
+  { id: 'testimonials', label: 'Testimonials' },
+  { id: 'contact', label: 'Contact' },
+];
 
 interface HeaderProps {
   activeSection?: string;
@@ -14,8 +22,8 @@ function Logo({ variant = 'dark', showTagline = false }: { variant?: 'light' | '
   const textColor = variant === 'light' ? 'text-white' : 'text-slate-900';
 
   return (
-    <div className="flex items-center gap-4">
-      <div className="relative w-11 h-11 shrink-0">
+    <div className="flex items-center gap-3">
+      <div className="relative w-11 h-11 shrink-0 -translate-y-1">
         <Image
           src="/Devmundus_nobg.png"
           alt="DevMundus Logo"
@@ -70,17 +78,67 @@ function Button({ variant = 'default', onClick, className = '', children }: Butt
 export function Header({ activeSection = '' }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About Us' },
-    { id: 'services', label: 'Services' },
-    { id: 'testimonials', label: 'Testimonials' },
-    { id: 'contact', label: 'Contact' },
-  ];
+  // Tracks the section currently in view via scrollspy. Stays null on pages
+  // that don't have any of NAV_ITEMS' ids in the DOM (e.g. /services), so
+  // `currentActive` below falls back to the static `activeSection` prop.
+  const [scrollActiveSection, setScrollActiveSection] = useState<string | null>(null);
+
+  // While true, IntersectionObserver updates are ignored — set for the
+  // duration of a click-triggered smooth scroll so the target link doesn't
+  // flicker back to whatever section is still on screen mid-scroll.
+  const isClickScrolling = useRef(false);
+
+  useEffect(() => {
+    const elements = NAV_ITEMS
+      .map((item) => document.getElementById(item.id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isClickScrolling.current) return;
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setScrollActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        // A thin band just below the fixed header — whichever section
+        // occupies it counts as "active".
+        rootMargin: '-100px 0px -70% 0px',
+        threshold: 0,
+      }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // Resume scrollspy tracking once the user's scroll settles after a click.
+  useEffect(() => {
+    let scrollEndTimer: ReturnType<typeof setTimeout>;
+    const handleScroll = () => {
+      clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(() => {
+        isClickScrolling.current = false;
+      }, 150);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollEndTimer);
+    };
+  }, []);
+
+  const currentActive = scrollActiveSection ?? activeSection;
 
   const scrollToSection = (sectionId: string) => {
     setMobileMenuOpen(false);
-    
+    isClickScrolling.current = true;
+    setScrollActiveSection(sectionId);
+
     setTimeout(() => {
       const element = document.getElementById(sectionId);
       if (element) {
@@ -92,8 +150,10 @@ export function Header({ activeSection = '' }: HeaderProps) {
           top: offsetPosition,
           behavior: 'smooth'
         });
+        window.history.replaceState(null, '', `#${sectionId}`);
       } else {
         console.warn(`Section with id '${sectionId}' not found`);
+        isClickScrolling.current = false;
         // Fallback: check if we're on home page, if not, navigate to home
         if (window.location.pathname !== '/') {
           window.location.href = `/#${sectionId}`;
@@ -111,24 +171,24 @@ export function Header({ activeSection = '' }: HeaderProps) {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-100 z-50 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-100 z-50 shadow-sm">
       <div className="container mx-auto px-6 py-4 relative">
         <div className="flex items-center justify-between">
           <Logo variant="dark" showTagline={true} />
 
           {/* Desktop Navigation */}
           <nav className="hidden xl:flex items-center gap-10">
-            {navItems.map((item) => (
+            {NAV_ITEMS.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`transition-all duration-200 relative ${activeSection === item.id
+                className={`px-0 py-1 transition-all duration-200 relative ${currentActive === item.id
                   ? 'text-slate-900'
                   : 'text-slate-600 hover:text-slate-900'
                   }`}
               >
                 {item.label}
-                {activeSection === item.id && (
+                {currentActive === item.id && (
                   <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-slate-900" />
                 )}
               </button>
@@ -164,11 +224,11 @@ export function Header({ activeSection = '' }: HeaderProps) {
             : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
             }`}
         >
-          {navItems.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className={`text-left py-3 px-4 transition-colors rounded-lg ${activeSection === item.id
+              className={`text-left py-3 px-4 transition-colors rounded-lg ${currentActive === item.id
                 ? 'text-slate-900 bg-slate-100'
                 : 'text-slate-600 hover:bg-slate-50'
                 }`}

@@ -12,28 +12,14 @@ export default function HomePage() {
     <div className="min-h-screen">
       <Header activeSection="home" />
 
-      {/* Hero Section with ID */}
-      <section id="home">
-        <Hero />
-      </section>
-
-      {/* About Section with ID (already in your About component) */}
+      {/* Each section below already declares its own id — do not wrap in
+          another <section id="..."> here, or the page ends up with
+          duplicate ids and scrollspy/getElementById break. */}
+      <Hero />
       <About />
-
-      {/* Services Section with ID */}
-      <section id="services">
-        <Services />
-      </section>
-
-      {/* Testimonials Section with ID */}
-      <section id="testimonials">
-        <Testimonials />
-      </section>
-
-      {/* Contact Section with ID */}
-      <section id="contact">
-        <Contact />
-      </section>
+      <Services />
+      <Testimonials />
+      <Contact />
 
       <Footer />
     </div>

@@ -38,7 +38,16 @@ export function Contact() {
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const turnstileWidgetIdRef  = useRef<string | null>(null);
 
-  // Load and render the Turnstile widget when a site key is configured
+  // Resolve/reject for the in-flight executeTurnstile() promise, set just
+  // before calling turnstile.execute() and consumed by the widget callbacks.
+  const turnstileResolveRef = useRef<((token: string) => void) | null>(null);
+  const turnstileRejectRef  = useRef<((err: Error) => void) | null>(null);
+
+  // Load the Turnstile widget when a site key is configured. Rendered with
+  // execution: 'execute' + appearance: 'interaction-only' so the challenge
+  // does NOT run on page load — it only fires when executeTurnstile() is
+  // called from handleSubmit, and stays invisible unless Cloudflare decides
+  // an interactive challenge is actually needed.
   useEffect(() => {
     if (!TURNSTILE_SITE_KEY) return;
 
@@ -54,9 +63,21 @@ export function Contact() {
 
       turnstileWidgetIdRef.current = w.render(turnstileContainerRef.current, {
         sitekey: TURNSTILE_SITE_KEY,
-        callback:          (token: string) => setTurnstileToken(token),
-        'expired-callback': ()              => setTurnstileToken(''),
-        'error-callback':   ()              => setTurnstileToken(''),
+        execution: 'execute',
+        appearance: 'interaction-only',
+        callback: (token: string) => {
+          setTurnstileToken(token);
+          turnstileResolveRef.current?.(token);
+          turnstileResolveRef.current = null;
+          turnstileRejectRef.current = null;
+        },
+        'expired-callback': () => setTurnstileToken(''),
+        'error-callback': () => {
+          setTurnstileToken('');
+          turnstileRejectRef.current?.(new Error('Security check failed. Please try again.'));
+          turnstileResolveRef.current = null;
+          turnstileRejectRef.current = null;
+        },
       });
     }
 
@@ -82,20 +103,49 @@ export function Contact() {
     };
   }, []);
 
+  // Triggers the Turnstile challenge on demand (called at submit time) and
+  // resolves once a token comes back from the widget's callback.
+  const executeTurnstile = (): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const w = (window as any).turnstile;
+      if (!w || turnstileWidgetIdRef.current === null) {
+        reject(new Error('Security check is still loading. Please try again in a moment.'));
+        return;
+      }
+      turnstileResolveRef.current = resolve;
+      turnstileRejectRef.current = reject;
+      w.execute(turnstileWidgetIdRef.current);
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage('');
 
     try {
+      // Run the CAPTCHA challenge now, only once the user has actually hit
+      // Submit — not preemptively on page load.
+      let token = turnstileToken;
+      if (TURNSTILE_SITE_KEY && !token) {
+        try {
+          token = await executeTurnstile();
+        } catch (err) {
+          setErrorMessage(err instanceof Error ? err.message : 'Security check failed. Please try again.');
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          company_website: honeypot,             // honeypot field
+          hp_check_2x9: honeypot,                 // honeypot field
           _formLoadTime: formLoadTimeRef.current, // timing field
-          turnstileToken,                         // Turnstile challenge token
+          turnstileToken: token,                  // Turnstile challenge token
         }),
       });
 
@@ -111,7 +161,7 @@ export function Contact() {
         setTurnstileToken('');
         formLoadTimeRef.current = Date.now();
 
-        // Reset the Turnstile widget so the user can submit again later
+        // Reset the Turnstile widget so the next submit re-runs the challenge
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (turnstileWidgetIdRef.current !== null) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -241,11 +291,11 @@ export function Contact() {
               aria-hidden="true"
               style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0 }}
             >
-              <label htmlFor="company_website">Company Website</label>
+              <label htmlFor="hp_check_2x9">Leave this field empty</label>
               <input
-                id="company_website"
+                id="hp_check_2x9"
                 type="text"
-                name="company_website"
+                name="hp_check_2x9"
                 value={honeypot}
                 onChange={(e) => setHoneypot(e.target.value)}
                 tabIndex={-1}
@@ -387,7 +437,7 @@ export function Contact() {
 
             <button
               type="submit"
-              disabled={isSubmitting || (!!TURNSTILE_SITE_KEY && !turnstileToken)}
+              disabled={isSubmitting}
               className="w-full bg-linear-to-r from-slate-900 to-slate-700 hover:from-slate-800 hover:to-slate-600 disabled:from-slate-400 disabled:to-slate-300 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 disabled:cursor-not-allowed group"
             >
               {isSubmitting ? (
