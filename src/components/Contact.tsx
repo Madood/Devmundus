@@ -164,7 +164,7 @@ export function Contact() {
     <section id="contact" className="py-20 lg:py-28 px-6 bg-slate-50">
       {/* Toast Notification */}
       {showToast && (
-        <div className="fixed top-20 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in slide-in-from-right-5 duration-300">
+        <div className="fixed top-20 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-sm bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in slide-in-from-right-5 duration-300">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
             Thank you for reaching out! Our team will contact you within 24 hours.

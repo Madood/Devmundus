@@ -50,7 +50,7 @@ export function Hero({ onNavigate }: HeroProps) {
   };
 
   return (
-    <section id="home" className="pt-40 pb-24 px-6 bg-linear-to-b from-slate-50 to-white">
+    <section id="home" className="pt-32 sm:pt-40 pb-16 sm:pb-24 px-6 bg-linear-to-b from-slate-50 to-white">
       <div className="container mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* LEFT */}
@@ -60,12 +60,12 @@ export function Hero({ onNavigate }: HeroProps) {
               <span className="text-sm">Trusted by 200+ Enterprise Clients</span>
             </div>
 
-            <h1 className="mb-6 text-slate-900 text-4xl lg:text-5xl font-bold leading-tight">
+            <h1 className="mb-6 text-slate-900 text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
               Build. Launch. Scale. <br /> Globally. Effortlessly.
             </h1>
 
             <p className="text-slate-600 mb-8 text-lg leading-relaxed">
-              <strong>DevMundus</strong> is your global technology partner for building world-class digital products. From concept to deployment and beyond, we handle the entire product journey — combining U.S.-based reliability with exceptional engineering expertise from our Pakistan development base.
+              <strong>DevMundus</strong> is your global technology partner for building world-class digital products. From concept to deployment and beyond, we handle the entire product journey, bringing together U.S.-based reliability with exceptional engineering expertise from our Pakistan development base.
             </p>
 
             <div className="space-y-3 mb-10">
@@ -115,14 +115,14 @@ export function Hero({ onNavigate }: HeroProps) {
               />
             </div>
 
-            <div className="absolute -bottom-8 -left-8 bg-white p-6 rounded-xl shadow-xl ring-1 ring-slate-900/5">
-              <div className="text-3xl text-slate-900 mb-1 font-bold">2,500+</div>
-              <div className="text-slate-600 text-sm">Expert Developers</div>
+            <div className="absolute -bottom-4 -left-2 sm:-bottom-8 sm:-left-8 bg-white p-4 sm:p-6 rounded-xl shadow-xl ring-1 ring-slate-900/5">
+              <div className="text-2xl sm:text-3xl text-slate-900 mb-1 font-bold">60+</div>
+              <div className="text-slate-600 text-xs sm:text-sm">Expert Developers</div>
             </div>
 
-            <div className="absolute -top-8 -right-8 bg-white p-6 rounded-xl shadow-xl ring-1 ring-slate-900/5">
-              <div className="text-3xl text-slate-900 mb-1 font-bold">250+</div>
-              <div className="text-slate-600 text-sm">Enterprise Partners</div>
+            <div className="absolute -top-4 -right-2 sm:-top-8 sm:-right-8 bg-white p-4 sm:p-6 rounded-xl shadow-xl ring-1 ring-slate-900/5">
+              <div className="text-2xl sm:text-3xl text-slate-900 mb-1 font-bold">100+</div>
+              <div className="text-slate-600 text-xs sm:text-sm">Enterprise Partners</div>
             </div>
           </div>
         </div>

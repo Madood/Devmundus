@@ -266,7 +266,7 @@ export function Testimonials() {
         <div className="max-w-2xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">4.9/5</div>
+              <div className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">4.3/5</div>
               <div className="text-sm text-slate-600">Average Rating</div>
             </div>
             <div>
@@ -278,7 +278,7 @@ export function Testimonials() {
               <div className="text-sm text-slate-600">Avg. Response Time</div>
             </div>
             <div>
-              <div className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">100%</div>
+              <div className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">85%</div>
               <div className="text-sm text-slate-600">Client Satisfaction</div>
             </div>
           </div>

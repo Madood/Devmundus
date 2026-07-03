@@ -39,15 +39,16 @@ export function About() {
                         icon: Shield,
                         title: "Enterprise-Grade Security",
                         description:
-                                "SOC 2, GDPR compliance with robust IP protection and secure development practices.",
+                                "GDPR compliance with robust IP protection and secure development practices.",
                 },
         ];
 
         const stats = [
-                { value: "500+", label: "Projects Delivered" },
-                { value: "200+", label: "Active Clients" },
-                { value: "98%", label: "Client Satisfaction" },
-                { value: "50+", label: "Countries Served" },
+                { value: "60+", label: "Active Developers" },
+                { value: "85%", label: "Client Satisfaction" },
+                { value: "100+", label: "Active Clients" },
+                { value: "40+", label: "Enterprise Partners" },
+                { value: "10+", label: "Countries Served" },
         ];
 
         return (
@@ -62,12 +63,7 @@ export function About() {
                                                 Your Global Technology Partner for Digital Excellence
                                         </h2>
                                         <p className="text-slate-600 text-lg leading-relaxed">
-                                                As a US-registered company with a robust development base in
-                                                Pakistan, DevMundus combines global reliability with exceptional
-                                                engineering expertise. We handle the entire product journey — from
-                                                concept and design to development, deployment, and long-term
-                                                support — delivering high-quality, cost-efficient solutions to
-                                                startups, agencies, and enterprises worldwide.
+                                                DevMundus is a US-registered company with a strong development base in Pakistan, bringing together global reliability and exceptional engineering talent. We take care of the entire product journey, from concept and design all the way through development, deployment, and long-term support, delivering high-quality, cost-efficient solutions to startups, agencies, and enterprises worldwide.
                                         </p>
                                 </div>
 
@@ -95,13 +91,13 @@ export function About() {
                                 </div>
 
                                 {/* Stats Section */}
-                                <div className="grid md:grid-cols-4 gap-8 p-12 bg-slate-900 rounded-2xl">
+                                <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8 p-6 sm:p-8 md:p-12 bg-slate-900 rounded-2xl">
                                         {stats.map((stat, index) => (
                                                 <div key={index} className="text-center">
-                                                        <div className="text-4xl font-bold mb-2 bg-linear-to-br from-teal-700 to-teal-500 bg-clip-text text-transparent">
+                                                        <div className="text-3xl sm:text-4xl font-bold mb-2 bg-linear-to-br from-teal-700 to-teal-500 bg-clip-text text-transparent">
                                                                 {stat.value}
                                                         </div>
-                                                        <p className="text-teal-100">{stat.label}</p>
+                                                        <p className="text-teal-100 text-sm sm:text-base">{stat.label}</p>
                                                 </div>
                                         ))}
                                 </div>

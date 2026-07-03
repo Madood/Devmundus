@@ -15,12 +15,12 @@ function Logo({ variant = 'dark', showTagline = false }: { variant?: 'light' | '
 
   return (
     <div className="flex items-center gap-4">
-      <div className="relative w-14 h-14 shrink-0">
+      <div className="relative w-11 h-11 shrink-0">
         <Image
-          src="/Logo.png"
+          src="/Devmundus_nobg.png"
           alt="DevMundus Logo"
-          width={56}
-          height={56}
+          width={44}
+          height={44}
           className="object-contain"
           priority
         />
@@ -31,8 +31,8 @@ function Logo({ variant = 'dark', showTagline = false }: { variant?: 'light' | '
         </div>
         {showTagline && (
           <div className="text-sm font-medium mt-0.5">
-            <span className="text-teal-700">Build</span>{' '}
-            <span className="text-teal-500">with confidence</span>
+            <span className="text-teal-700">Innovation</span>{' '}
+            <span className="text-teal-500">without borders</span>
           </div>
         )}
       </div>
@@ -112,12 +112,12 @@ export function Header({ activeSection = '' }: HeaderProps) {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-100 z-50 shadow-sm">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-6 py-4 relative">
         <div className="flex items-center justify-between">
           <Logo variant="dark" showTagline={true} />
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-10">
+          <nav className="hidden xl:flex items-center gap-10">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -136,7 +136,7 @@ export function Header({ activeSection = '' }: HeaderProps) {
           </nav>
 
           {/* Desktop Buttons */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-3">
             <Button variant="ghost" onClick={handleSolutionsClick}>
               Explore Solutions
             </Button>
@@ -150,45 +150,48 @@ export function Header({ activeSection = '' }: HeaderProps) {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden text-slate-900 p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="xl:hidden text-slate-900 p-2 hover:bg-slate-100 rounded-lg transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <nav className="lg:hidden mt-4 pb-4 flex flex-col gap-3 border-t border-gray-100 pt-4">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`text-left py-3 px-4 transition-colors rounded-lg ${activeSection === item.id
-                  ? 'text-slate-900 bg-slate-100'
-                  : 'text-slate-600 hover:bg-slate-50'
-                  }`}
-              >
-                {item.label}
-              </button>
-            ))}
-            <div className="flex flex-col gap-2 mt-2 px-4">
-              <Button
-                variant="outline"
-                onClick={handleSolutionsClick}
-                className="w-full justify-center"
-              >
-                Explore Solutions
-              </Button>
-              <Button
-                onClick={handleConsultationClick}
-                className="bg-linear-to-r from-teal-700 to-teal-500 text-white hover:from-teal-600 hover:to-teal-400 w-full justify-center"
-              >
-                Request Consultation
-              </Button>
-            </div>
-          </nav>
-        )}
+        {/* Mobile Dropdown Navigation */}
+        <nav
+          className={`xl:hidden absolute left-4 right-4 top-full mt-2 flex flex-col gap-1 rounded-2xl border border-gray-100 bg-white shadow-xl p-3 origin-top transition-all duration-200 ease-out ${mobileMenuOpen
+            ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+            : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+            }`}
+        >
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              className={`text-left py-3 px-4 transition-colors rounded-lg ${activeSection === item.id
+                ? 'text-slate-900 bg-slate-100'
+                : 'text-slate-600 hover:bg-slate-50'
+                }`}
+            >
+              {item.label}
+            </button>
+          ))}
+          <div className="flex flex-col gap-2 mt-2 px-4 pb-1">
+            <Button
+              variant="outline"
+              onClick={handleSolutionsClick}
+              className="w-full justify-center"
+            >
+              Explore Solutions
+            </Button>
+            <Button
+              onClick={handleConsultationClick}
+              className="bg-linear-to-r from-teal-700 to-teal-500 text-white hover:from-teal-600 hover:to-teal-400 w-full justify-center"
+            >
+              Request Consultation
+            </Button>
+          </div>
+        </nav>
       </div>
     </header>
   );

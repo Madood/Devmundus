@@ -21,7 +21,7 @@ export function Logo({ variant = 'dark', showTagline = false, size = 'md' }: Log
                         <span className={`font-bold ${sizes[size]}`}>DevMundus</span>
                         {showTagline && (
                                 <span className="text-sm text-slate-500">
-                                        Bridging Tech Stars with Opportunity
+                                        Innovation without borders
                                 </span>
                         )}
                 </div>
